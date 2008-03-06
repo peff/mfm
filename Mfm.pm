@@ -5,6 +5,7 @@ use File::Basename;
 use File::Copy;
 use Mfm::Path; # DEPEND
 use Mfm::Target; # DEPEND
+use Error::Multi; # DEPEND
 use base qw(Exporter);
 our @EXPORT;
 
@@ -141,6 +142,24 @@ sub alias {
   my $rule = shift;
   $TARGET->set_rule($rule);
   $TARGET->run_rules;
+}
+
+push @EXPORT, qw(trydepend_init trydepend trydepend_die);
+my @TRYDEPEND_EXCEPTIONS;
+sub trydepend_init {
+  @TRYDEPEND_EXCEPTIONS = ();
+}
+sub trydepend {
+  eval {
+    dependon @_;
+  };
+  return 1 unless $@;
+  push @TRYDEPEND_EXCEPTIONS, $@;
+  return 0;
+}
+sub trydepend_die {
+  my $m = shift;
+  die Error::Multi->new($m, @TRYDEPEND_EXCEPTIONS);
 }
 
 1;

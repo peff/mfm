@@ -2,10 +2,10 @@ package Mfm;
 use strict;
 use File::Path;
 use File::Basename;
-use File::Copy;
 use Mfm::Path; # DEPEND
 use Mfm::Target; # DEPEND
 use Error::Multi; # DEPEND
+use SimpleIO::Copy; # DEPEND
 use base qw(Exporter);
 our @EXPORT;
 
@@ -31,24 +31,6 @@ sub dependon {
   foreach my $t (@_) {
     get($t)->run_rules;
   }
-}
-
-sub safe_copy {
-  use File::stat;
-  my $from = shift;
-  my $to = shift;
-  my $tmp = "$to.tmp";
-
-  my $st = stat($from) or die "unable to stat $from: $!";
-  my $fh = IO::File->new($tmp, 'w')
-    or die "unable to open $tmp for writing: $!";
-  chmod($st->mode, $tmp) or die "unable to set mode of $tmp: $!";
-  copy($from, $fh)
-    or die "unable to copy $from to $tmp: $!";
-  utime($st->atime, $st->mtime, $tmp)
-    or die "unable to set mtime of $tmp: $!";
-  rename($tmp, $to)
-    or die "unable to rename $tmp to $to: $!";
 }
 
 push @EXPORT, qw(borrow);

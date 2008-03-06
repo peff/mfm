@@ -1,0 +1,4 @@
+hier() {
+  d "$auto_home/bin" -1 -1 0755
+  c "$auto_home/bin" mfm -1 -1 0755
+}

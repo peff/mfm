@@ -36,7 +36,7 @@ elsif($cmd eq 'reallyclean') {
 }
 
 elsif($cmd eq 'borrow') {
-  borrow($_) foreach @_;
+  borrow($_) foreach @ARGV;
 }
 
 else {

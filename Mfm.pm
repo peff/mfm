@@ -144,4 +144,22 @@ sub trydepend_die {
   die Error::Multi->new($m, @TRYDEPEND_EXCEPTIONS);
 }
 
+push @EXPORT, qw(extragen);
+sub extragen {
+  get($_)->visible(1) foreach @_;
+}
+
+push @EXPORT, qw(replace_ext);
+sub replace_ext {
+  local $_ = shift;
+  my $old = shift || '[^.]+';
+  my $new = shift;
+
+  if(s/\.\Q$old\E$// && defined $new) {
+    $_ .= ".$new";
+  }
+  return $_;
+}
+
+
 1;

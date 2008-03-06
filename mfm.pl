@@ -4,6 +4,7 @@ use Error::Die; # DEPEND
 use Mfm; # DEPEND
 use SimpleIO::Cat; # DEPEND
 use SimpleIO::Write; # DEPEND
+use SimpleIO::Copy; # DEPEND
 use File::Path;
 
 my $cmd = @ARGV ? shift : 'build';
@@ -37,6 +38,12 @@ elsif($cmd eq 'reallyclean') {
 
 elsif($cmd eq 'borrow') {
   borrow($_) foreach @ARGV;
+}
+
+elsif($cmd eq 'install') {
+  my $from = shift || '.';
+  my $to = shift || "$AutoHome::HOME/share/mfm";
+  recursive_copy($from, $to);
 }
 
 else {

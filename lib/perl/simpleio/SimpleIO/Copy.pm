@@ -1,8 +1,11 @@
 package SimpleIO::Copy;
 use strict;
 use File::Copy;
+use File::Find;
+use File::Path;
+use File::Basename;
 use base qw(Exporter);
-our @EXPORT = qw(safe_copy);
+our @EXPORT = qw(safe_copy recursive_copy);
 
 sub safe_copy {
   use File::stat;
@@ -20,6 +23,21 @@ sub safe_copy {
     or die "unable to set mtime of $tmp: $!";
   rename($tmp, $to)
     or die "unable to rename $tmp to $to: $!";
+}
+
+sub recursive_copy {
+  my ($from, $to) = @_;
+
+  find({
+    wanted => sub {
+      return unless -f $_;
+      return if /^\./;
+      my $base = substr($File::Find::name, length($from)+1);
+      my $dest = "$to/$base";
+      mkpath(dirname($dest));
+      safe_copy($_, $dest);
+    },
+  }, $from);
 }
 
 1;

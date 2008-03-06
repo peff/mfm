@@ -1,0 +1,4 @@
+/usr/bin/perl
+
+This is the location of the perl binary; it will be placed at the top of all
+executable perl scripts as #!/usr/bin/perl (or whatever).

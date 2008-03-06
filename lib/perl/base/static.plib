@@ -1,0 +1,17 @@
+BEGIN {
+  open(my $fh, $0) or die "unable to open $0: $!";
+  while(my $line = <$fh>) { last if $line =~ /^__END__/ }
+  my %index;
+  while(my $line = <$fh>) {
+    if($line =~ /^__STATIC_INCLUDE__ (.*)/) {
+      $index{$1} = tell($fh);
+    }
+  }
+  unshift @INC, sub {
+    (undef, my $name) = @_;
+    $index{$name} or return undef;
+    open(my $r, '<', $0) or die "unable to open $0: $!";
+    seek($r, $index{$name}, 0) or die "unable to seek: $!";
+    return $r;
+  };
+}

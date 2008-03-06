@@ -1,0 +1,5 @@
+#!/bin/sh
+
+MFM_PATH=$(pwd)/lib
+export MFM_PATH
+perl `for i in lib/perl/*; do echo -I$i; done` mfm.pl build

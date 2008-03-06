@@ -1,0 +1,1 @@
+alias 'rule.pl.do';

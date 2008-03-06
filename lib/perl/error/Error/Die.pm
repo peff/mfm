@@ -2,7 +2,7 @@ package Error::Die;
 use strict;
 use Error::Base; # DEPEND
 
-use vars qw($FATAL $DEBUG);
+use vars qw($FATAL $DEBUG @CLEANUP);
 
 sub die {
   if(ref $_[0]) {
@@ -18,6 +18,7 @@ sub die {
 sub catch_top {
   CORE::die @_ if $^S;
   print STDERR "$FATAL@_\n";
+  $_->() foreach @CLEANUP;
   exit 111;
 }
 

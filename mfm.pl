@@ -11,6 +11,7 @@ my $cmd = @ARGV ? shift : 'build';
 if($cmd eq 'build') {
   do_clean();
 
+  push @Error::Die::CLEANUP, sub { eval { rmtree("$_") } foreach @CLEAN };
   get('BUILD')->run_rules;
   get($_)->run_rules foreach cat('BUILD');
   $_->run_finalize foreach targets;

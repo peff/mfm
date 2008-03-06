@@ -1,0 +1,3 @@
+c++ -O2
+
+This is the program used to compile .cc files.

@@ -7,7 +7,7 @@ sub expand {
   return
   map {
     $_,
-    -f "$_/MFM" ? expand("$_/MFM") : ()
+    -f "$_/MFM" ? expand("$_/MFM", @_) : ()
   }
   grep { -d $_ }
   map {

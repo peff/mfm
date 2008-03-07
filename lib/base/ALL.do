@@ -1,0 +1,1 @@
+alias 'MFMCONF.do';

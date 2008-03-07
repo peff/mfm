@@ -1,0 +1,145 @@
+mfm -- The MakeFile Maker
+=========================
+
+What is mfm?
+------------
+
+mfm is a program for automatically generating Makefiles. Its goals are:
+
+- to create portable Makefiles that will work with all POSIX-compliant
+  versions of make
+
+- to minimize the effort required by the writer of the Makefile
+
+- to be easily extensible
+
+mfm consists of a Perl script and a set of reusable rule templates, also
+written in Perl. For each item to be built, a software author specifies
+a rule template and its parameters; the mfm program uses this
+information to build a Makefile. The Makefile is distributed with the
+source code; an end-user of the package doesn't need to have any special
+software installed. The system can be extended by writing new rule
+templates.
+
+See the link:example.html[hello world example] for an idea of what mfm's
+input looks like.
+
+
+Why not make?
+-------------
+
+When using make, one must choose between ease-of-use and portability.
+Constructs like this:
+
+-----------------------------------------------------
+foo: bar
+        cmd -o foo bar
+-----------------------------------------------------
+
+are very portable. However, what if `cmd` is complex, and there are many
+such files to be made? The author has to specify each one individually;
+if `cmd` is changed, it must be changed for each rule.
+
+One can create a template to make `*.foo` from `*.bar` using a suffix
+rule:
+
+-----------------------------------------------------
+.bar.foo:
+        cmd -o $@ $>
+-----------------------------------------------------
+
+but there are some limitations. There can be no additional dependencies
+for the `.foo` file. The files must have the correct extensions. If there
+are multiple ways to make a `.foo` file, there is no way to specify
+which one you want to use for a given `.foo` file.
+
+Some implementations, like GNU make, have invented their own syntax for
+rule patterns:
+
+-----------------------------------------------------
+%.foo: %.bar another-dependency
+        cmd -o $@ $^
+-----------------------------------------------------
+
+Unfortunately, this is not portable to other versions of make;
+distributing Makefiles created like this means that end-users _must_
+have GNU make.
+
+mfm achieves portability by generating very simple Makefiles (i.e., all
+rule templates are expanded to include their parameters). Because rule
+templates can have names, there is greater flexibility (e.g., you can
+say "build a.foo from a.bar using template foobar"). Because rule
+templates are written in Perl, they can be more complex than simple text
+substitution.
+
+
+Why not automake/autoconf?
+--------------------------
+
+automake can greatly reduce the required effort in writing Makefiles,
+and the results it generates are portable. However:
+
+- automake is complex and requires autoconf, another complex tool.
+  automake is almost 8000 lines of code; mfm, by contrast, contains
+  about 1/10th as many lines.
+
+- automake input syntax is based on Makefiles, and some parts of the
+  input are simply passed through to the resulting Makefile. This syntax
+  can make it hard to specify complex constructs. mfm allows rule
+  writers to write in Perl, allowing complex data structures and
+  text manipulation, while providing a set of convenience functions that
+  make rules short and easy to read.
+
+autoconf provides shell script templates to check for common portability
+issues. While this may at first seem outside the domain of mfm, mfm
+enables writing extensive rules which take into account such portability
+issues (so it is merely a _framework_ for extensible rules which deal
+with such issues). autoconf suffers from some problems:
+
+- tests are written in m4, which can be error-prone
+
+- the output is one giant shell script which runs independent of the
+  build process; configuration generally goes into the configured
+  Makefile. By contrast, mfm encourages input data (including
+  user-specified build-time configuration) to be stored in files,
+  allowing it to be part of the build process. This means that changes
+  in configuration (e.g., compiler flags) are automatically detected and
+  respected by make.
+
+
+Why not http://www.superscript.com/build/intro.html[build]?
+-----------------------------------------------------------
+
+Build provides a system for using rule templates to easily build
+software packages. In fact, mfm was initially inspired by build. Here
+are some problems with build:
+
+- rule templates are not very flexible
+
+- rule templates are written in Bourne shell script. This can make
+  templates hard to write, since shell script lacks feature of more
+  advanced programming languages.
+
+- assumes a /package-style source directory. mfm tries to make as few
+  assumptions as possible about the source package, instead relying on
+  rules to enforce assumptions (though mfm does come with a rich
+  default ruleset).
+
+
+Why not <insert build system>?
+------------------------------
+
+There are many build systems in the world. Some are better than mfm, and
+some are worse; some simply make different tradeoffs. Some common
+problems are:
+
+- the system actually runs the build process rather than generating a
+  Makefile. This often can make the system more pleasant to use for the
+  developer. However, it makes life harder on users who may not have the
+  build tool.
+
+- the system contains many features specific to a particular build style
+  or language. This can make the system more pleasant to use for its
+  intended purpose, but means that if you work on several projects, you
+  may have to deal with many different build systems (or you may have
+  several languages/styles within a single project)

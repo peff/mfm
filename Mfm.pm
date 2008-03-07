@@ -10,7 +10,6 @@ use base qw(Exporter);
 our @EXPORT;
 
 our $DEBUG = $ENV{MFM_DEBUG} || $ENV{DEBUG} || 0;
-my @PATH = split /:/, $ENV{MFM_PATH};
 
 our $TARGET; push @EXPORT, '$TARGET';
 our $RULEDATA; push @EXPORT, '$RULEDATA';

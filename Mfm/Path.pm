@@ -2,10 +2,12 @@ package Mfm::Path;
 use strict;
 use Mfm::File; # DEPEND
 use Mfm; # DEPEND
-use AutoHome; # DEPEND
 
 my @PATH = split /:/, $ENV{MFM_PATH};
+eval {
+require AutoHome; # DEPEND
 push @PATH, "$AutoHome::HOME/share/mfm";
+};
 
 my $borrow;
 sub borrow {

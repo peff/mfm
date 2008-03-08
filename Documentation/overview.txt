@@ -1,6 +1,10 @@
 mfm -- The MakeFile Maker
 =========================
 
+- link:install.html[How to install mfm]
+- link:use.html[How to use mfm]
+- link:example.html["hello, world" example]
+
 What is mfm?
 ------------
 

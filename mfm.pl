@@ -46,6 +46,10 @@ elsif($cmd eq 'install') {
   recursive_copy($from, $to);
 }
 
+elsif($cmd eq 'rulesets') {
+  print "$_\n" foreach Mfm::Path::rule;
+}
+
 else {
   die "unknown command: $cmd";
 }

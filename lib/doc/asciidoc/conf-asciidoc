@@ -1,4 +1,4 @@
-asciidoc -s
+asciidoc
 
 The first line of this file specifies the command for building asciidoc
 files.

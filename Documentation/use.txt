@@ -1,0 +1,281 @@
+mfm usage
+=========
+
+This document contains information on using mfm to generate Makefiles
+for your packages. To build a package with mfm, the following steps are
+followed:
+
+. The user tells mfm which sets of rules to use.
+
+. The user teels mfm which targets to build. For some targets, the rule
+template can be deduced by extension. For others, the user specifies the
+template to be used.
+
+. The user runs mfm, which creates a Makefile and other control files.
+
+. The user runs make, which builds the package.
+
+The specifics of each step are described below.
+
+
+Specifying rulesets
+-------------------
+
+How do I tell mfm which sets of rules to use?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Rulesets are listed, one per line, in the file `MFM` in the current
+directory. Rulesets may recursively include other rulesets via `MFM`
+files in the ruleset directories.
+
+The implicit ruleset `.` (the current directory) is always prepended to
+the list of rulesets.
+
+
+What is the format of the `MFM` file?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each line contains the name of one ruleset. If the name begins with a
+`/`, then the name specifies the absolute path to a directory containing
+the ruleset. If the name begins with a `.`, then the name specifies a
+a path relative to the current directory. Otherwise, the name is
+resolved to a directory by searching through the mfm library path.
+
+Before being split into lines, the `MFM` file is first interpolated as a
+Perl string (i.e., as if it were contained in Perl double-quotes). In
+most cases, the result is identical to the input; however there are two
+important implications:
+
+. Any metacharacters must be quoted. For example:
++
+-----------------------------------------------------
+name with \$ and \\
+quotes are "ok"
+-----------------------------------------------------
+
+. Dynamic generation of `MFM` content is possible. For example:
++
+-----------------------------------------------------
+$ENV{HOME}/mfm/ruleset
+@{[system('generate_rulesets')]}
+-----------------------------------------------------
+
+
+How are rulesets resolved in the mfm library path?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each component of the library path, the ruleset name is appended to
+the component to create a candidate directory. The components come from
+two sources, and are examined in this order:
+
+. Components are contained in the `MFM_PATH` environment variable,
+separated by a colon (`:`).
+
+. The final component is the `$conf-home/share/mfm`, where `$conf-home`
+is determined at mfm's build-time from the file `conf-home`.
+
+
+What is the order of ruleset lookup for recursive `MFM` files?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ruleset which includes an `MFM` file has that file expanded in a
+depth-first way. In other words, all rulesets caused by expanding a
+single line take the place of that line.
+
+
+What is an example of a complex ruleset expansion?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Imagine that your `MFM_PATH` contains `/home/user/mfm:/home/user2/mfm`
+and mfm was built with a `conf-home` of `/usr/local`. Your current
+working directory is `/home/user/project`.  The file `MFM` contains:
+
+-----------------------------------------------------
+/usr/share/extra-rules
+./lib
+base
+-----------------------------------------------------
+
+The following ruleset directories will be used (in the order given):
+
+-----------------------------------------------------
+/usr/share/extra-rules
+/home/user/project/lib
+/home/user/mfm/base
+/home/user2/mfm/base
+/usr/local/share/mfm/base
+-----------------------------------------------------
+
+Furthermore, suppose that `/home/user/mfm/base` contains an `MFM` file
+with additional rulesets:
+
+-----------------------------------------------------
+other/ruleset
+-----------------------------------------------------
+
+The resulting ruleset list will be:
+
+-----------------------------------------------------
+/usr/share/extra-rules
+/home/user/project/lib
+/home/user/mfm/base
+/home/user/mfm/other/ruleset
+/home/user2/mfm/other/ruleset
+/usr/local/share/mfm/other/ruleset
+/home/user2/mfm/base
+/usr/local/share/mfm/base
+-----------------------------------------------------
+
+The recursively included ruleset is included just after the ruleset
+which mentioned it.
+
+
+How do I know which rulesets mfm is using?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use the `mfm rulesets` command to get an expanded list of
+directories.
+
+
+Specifying targets and their rules
+----------------------------------
+
+How do I tell mfm which targets to build?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Put the name of each target, one per line, in the file `BUILD` in the
+current directory.
+
+
+How is each target built?
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mfm looks through each ruleset for a rule that can make the requested
+target. For the target `foo.bar`, it performs the following search:
+
+1. Look for the file `foo.bar.do` or `foo.bar=*` in each ruleset (the
+first instance of either one is selected).
+
+2. If not found, then look for `rule.bar.do` in each ruleset (if there
+is no extension, this search is skipped).
+
+3. If not found, look for `default.do` in the search path.
+
+4. If not found, abort.
+
+
+How do `foo.bar.do` rules work?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The rule provides explicit instructions for building `foo.bar`. There
+are no parameters to the template. This construct is analagous to the
+Makefile snippet:
+
+-----------------------------------------------------
+foo.bar: $(DEPENDENCIES_THAT_FOO.BAR.DO_KNOWS_ABOUT)
+        cmds_that_foo.bar.do_knows_about
+-----------------------------------------------------
+
+It is useful for targets which don't share any common dependencies or
+commands with other targets.
+
+
+How do `foo.bar=*` rules work?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The rule indicates that a named template should be used. For example,
+the file `foo.bar=x` indicates that the `x` rule template should be
+used. The file `rule=x.do` contains the matching template; it is found
+in the ruleset path, and invoked with the file `foo.bar=x` as input. The
+exact contents and format of the `foo.bar=x` data file depend on the
+individual template used (see the ruleset documentation).
+
+
+How do `rule.bar.do` rules work?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This rule is analagous to a suffix rule in make. The rule is given no
+information by the user except the name of the resulting file.
+Heuristics or conventions are used to guess the name of the source file.
+For example, `rule.o.do` guesses that `foo.o` will be created by
+`foo.c`.
+
+
+How does `default.do` work?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This depends on how it is defined by any rulesets which are used.
+However, most projects will use the version of `default.do` contained
+the `base` ruleset. That rule simply "borrows" the target from the
+ruleset path into the current directory.
+
+
+How does borrowing work?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Borrowed files are search for in a manner similar to rules. The first
+instance of the file in the ruleset list is copied into the current
+directory (if the file is already in the current directory, then it will
+be found in the implicit ruleset `.`, and this is a no-op).
+
+
+Why would I want to borrow files?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two main reasons.
+
+1. Many rules depend on helper scripts; borrowing allows rulesets to
+provide these helper scripts.
+
+2. Projects using mfm can include "mini-libraries": pieces of code that
+are so small that asking the user of the project to install them
+separately would be a pain. Instead, the project can be distributed with
+these mini-libraries included. mfm uses mini-libraries to deal with
+configuration and portability issues.
+
+
+Invoking mfm
+------------
+
+
+What parameters can I use to call mfm?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The first command-line option to mfm specifies a subcommand to perform.
+The most common subcommands are:
+
+- build
+- clean
+
+If no subcommand is given, then 'build' is assumed.
+
+What does `mfm build` do?
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mfm will invoke the rule for each target listed in the `BUILD` file
+and write the resulting Makefile.
+
+It will also write a file, `FILES`, which contains the name of each
+source file, one per line. A source file is a file that is a dependency
+of some target in the Makefile, but which is not itself built (shipping
+the Makefile and all files listed in `FILES` is therefore sufficient to
+allow others to build the project).
+
+It will also write a file, `CLEAN`, which contains the name of each file
+generated or borrowed by mfm. This file can later be used to remove the
+work done by mfm.
+
+
+What does `mfm clean` do?
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For every file listed in `CLEAN`, mfm will remove that file. For every
+directory listed in `CLEAN`, mfm will recursively remove that directory.
+This is conceptually the opposite of `mfm build`; the command `mfm
+build; mfm clean` should produce no changes.
+
+Where can I find an example of mfm being used?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mfm is self-hosting, so you can examine its `MFM` and `BUILD` files.
+There is also a link:example.html[hello world example] with commentary.

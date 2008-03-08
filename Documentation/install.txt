@@ -1,0 +1,38 @@
+Installing mfm
+==============
+
+Requirements
+------------
+
+To run mfm, you will need:
+
+- perl, at least version 5.6
+
+- many rulesets rely on a POSIX-compliant shell and some basic utilities
+
+
+Releases
+--------
+
+Latest version:
+
+- link:mfm-0.9.tar.gz[mfm-0.9.tar.gz]
+
+
+Installation
+------------
+
+1. Unpack the mfm package:
+
+  gunzip mfm-0.9.tar.gz
+  tar xf mfm-0.9.tar
+  cd mfm-0.9
+
+2. (Optional) Set any build-time configuration you want by editing the
+   `conf-*` files. The most commonly changed settings are:
+- `conf-home` specifies the location to which mfm will be installed
+  (default: /usr/local)
+- `conf-perl` specifies the path to the perl interpreter (default:
+  /usr/bin/perl)
+
+3. Run `make install`

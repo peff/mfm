@@ -15,6 +15,7 @@ out="$1"; shift
    case "$i" in
      *.pm)
        echo "__STATIC_INCLUDE__ $i"
+       echo "#line 1 \"$i\""
        cat "$i" || exit 1
        echo '__END__'
        ;;

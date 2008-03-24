@@ -121,8 +121,11 @@ sub run {
 push @EXPORT, qw(alias);
 sub alias {
   my $rule = shift;
-  $TARGET->set_rule($rule);
-  $TARGET->run_rules;
+  eval {
+    $TARGET->set_rule($rule);
+    $TARGET->run_rules;
+  };
+  $@ and die $DEBUG ? $@ : $@->{child};
 }
 
 push @EXPORT, qw(trydepend_init trydepend trydepend_die);

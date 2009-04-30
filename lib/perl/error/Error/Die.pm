@@ -16,7 +16,7 @@ sub die {
 }
 
 sub catch_top {
-  CORE::die @_ if $^S;
+  CORE::die @_ if $^S || !defined($^S);
   print STDERR "$FATAL@_\n";
   $_->() foreach @CLEANUP;
   exit 111;

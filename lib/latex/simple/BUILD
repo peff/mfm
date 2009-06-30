@@ -1,0 +1,3 @@
+tex
+clean
+vcsignore

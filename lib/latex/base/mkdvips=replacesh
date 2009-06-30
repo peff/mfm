@@ -1,0 +1,3 @@
+mkdvips.sh
+DVIPS conf-dvips
+PAPER conf-paper

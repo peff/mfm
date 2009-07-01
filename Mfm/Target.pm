@@ -64,7 +64,7 @@ sub write_makefile {
   my $self = shift;
   my $fh = shift;
 
-  if($self->{visible}) {
+  if($self->{visible} && ($self->deps || $self->commands)) {
     print $fh "\n";
     print $fh "$self:";
     if($self->deps) {

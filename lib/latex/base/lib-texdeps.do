@@ -5,7 +5,7 @@ sub {
   open(my $fh, '<', $fn)
     or die "unable to open $fn: $!";
 
-  my @deps;
+  my @deps = ($fn);
   while(<$fh>) {
     chomp;
     if(/^\\([a-zA-Z]+)(?:\[[^\]]*\])?{([^}]*)}(?: *%% *)?([A-Z]+)?/) {

@@ -7,7 +7,7 @@ followed:
 
 . The user tells mfm which sets of rules to use.
 
-. The user teels mfm which targets to build. For some targets, the rule
+. The user tells mfm which targets to build. For some targets, the rule
 template can be deduced by extension. For others, the user specifies the
 template to be used.
 

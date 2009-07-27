@@ -2,5 +2,5 @@ perl/simpleio
 perl/error
 perl/base
 shell/install/allbin
-doc/asciidoc
+doc/asciidoc/base
 base

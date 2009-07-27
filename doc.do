@@ -1,4 +1,4 @@
-dependon 'DOCS';
+dependon qw(asciidoc);
 
 target;
-dependon cat('DOCS');
+dependon qw(html);

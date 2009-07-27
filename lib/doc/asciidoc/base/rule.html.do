@@ -1,5 +1,5 @@
 my $source = replace_ext($TARGET, 'html', 'txt');
 
 target;
-dependon 'mkasciidoc', $source;
+dependon qw(mkasciidoc asciidoc.conf), $source;
 formake "./mkasciidoc $TARGET $source";

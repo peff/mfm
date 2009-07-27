@@ -1,1 +1,1 @@
-exec @@ASCIIDOC@@ -o "$1" "$2"
+exec @@ASCIIDOC@@ -f asciidoc.conf -o "$1" "$2"

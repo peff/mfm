@@ -11,7 +11,7 @@ push @PATH, "$AutoHome::HOME/share/mfm";
 
 my $borrow;
 sub borrow {
-  $borrow ||= [Mfm::uniq(Mfm::File::expand('MFM', @PATH))];
+  $borrow ||= [Mfm::uniq(Mfm::File::expand('MFM-RULES', @PATH))];
   return @$borrow;
 }
 

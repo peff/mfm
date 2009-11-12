@@ -1,5 +1,5 @@
 my @source = (
-  (-e 'PERLHEADER' ? cat('PERLHEADER') : ()),
+  (-e 'MFM-PERLHEADER' ? cat('MFM-PERLHEADER') : ()),
   cat($RULEDATA),
   "$TARGET.pl"
 );

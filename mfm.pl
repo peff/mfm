@@ -13,16 +13,16 @@ if($cmd eq 'build') {
   do_clean();
 
   push @Error::Die::CLEANUP, sub { eval { rmtree("$_") } foreach @CLEAN };
-  get('BUILD')->run_rules;
-  get($_)->run_rules foreach cat('BUILD');
+  get('MFM-BUILD')->run_rules;
+  get($_)->run_rules foreach cat('MFM-BUILD');
   $_->run_finalize foreach targets;
 
   write_makefile('Makefile',
     sort { $a->{priority} <=> $b->{priority} || $a cmp $b } targets
   );
-  write_file('FILES', sort(@FILES)) if @FILES;
-  write_file('CLEAN', sort(@CLEAN)) if @CLEAN;
-  write_file('REALLYCLEAN', sort(@REALLYCLEAN)) if @REALLYCLEAN;
+  write_file('MFM-FILES', sort(@FILES)) if @FILES;
+  write_file('MFM-CLEAN', sort(@CLEAN)) if @CLEAN;
+  write_file('MFM-REALLYCLEAN', sort(@REALLYCLEAN)) if @REALLYCLEAN;
 }
 
 elsif($cmd eq 'clean') {
@@ -31,7 +31,7 @@ elsif($cmd eq 'clean') {
 
 elsif($cmd eq 'reallyclean') {
   do_clean();
-  foreach my $f (eval { cat('REALLYCLEAN') }, qw(REALLYCLEAN)) {
+  foreach my $f (eval { cat('MFM-REALLYCLEAN') }, qw(REALLYCLEAN)) {
     eval { rmtree($f) }
   };
 }
@@ -58,8 +58,8 @@ exit 0;
 
 sub do_clean {
   foreach my $f (
-      eval { cat('CLEAN') },
-      qw(Makefile FILES CLEAN)) {
+      eval { cat('MFM-CLEAN') },
+      qw(Makefile MFM-FILES MFM-CLEAN)) {
     eval { rmtree($f) };
   }
 }

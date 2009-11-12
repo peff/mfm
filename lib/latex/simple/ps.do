@@ -1,3 +1,3 @@
-dependon 'TEX';
+dependon 'MFM-TEX';
 target;
-dependon map { "$_.ps" } cat('TEX');
+dependon map { "$_.ps" } cat('MFM-TEX');

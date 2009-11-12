@@ -1,3 +1,3 @@
-dependon 'ASCIIDOC';
+dependon 'MFM-ASCIIDOC';
 target;
-dependon map { "$_.ps" } cat('ASCIIDOC');
+dependon map { "$_.ps" } cat('MFM-ASCIIDOC');

@@ -1,6 +1,6 @@
 my @TYPES = (
-  ['BINARIES', 'bin', '0755'],
-  ['SHARE', 'share', '0644'],
+  ['MFM-BINARIES', 'bin', '0755'],
+  ['MFM-SHARE', 'share', '0644'],
 );
 
 my @lines;

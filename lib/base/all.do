@@ -1,4 +1,4 @@
-dependon('ALL');
+dependon('MFM-ALL');
 target;
 priority 5;
-dependon cat('ALL');
+dependon cat('MFM-ALL');

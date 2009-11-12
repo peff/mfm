@@ -2,4 +2,4 @@
 
 MFM_PATH=$(pwd)/rules
 export MFM_PATH
-perl "$@" `for i in rules/perl/*; do echo -I$i; done` mfm.pl build
+perl "$@" -Ilib `for i in rules/perl/*; do echo -I$i; done` mfm.pl build

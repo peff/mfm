@@ -14,8 +14,8 @@ out="$1"; shift
  for i in "$@"; do
    case "$i" in
      *.pm)
-       echo "__STATIC_INCLUDE__ $i"
-       echo "#line 1 \"$i\""
+       echo "__STATIC_INCLUDE__ ${i#lib/}"
+       echo "#line 1 \"${i#lib/}\""
        cat "$i" || exit 1
        echo '__END__'
        ;;

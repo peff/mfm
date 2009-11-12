@@ -15,5 +15,5 @@ sub {
       last;
     }
   }
-  return map { s!::!/!g; "$_.pm" } @r;
+  return map { s!::!/!g; "lib/$_.pm" } @r;
 }

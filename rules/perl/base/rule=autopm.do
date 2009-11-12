@@ -1,5 +1,6 @@
 my ($var, $src) = cat($RULEDATA);
 my $package = $TARGET->name;
+$package =~ s#^lib/##;
 $package =~ s#/#::#g;
 $package =~ s/\.pm$//;
 

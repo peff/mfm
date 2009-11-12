@@ -1,5 +1,5 @@
 #!/bin/sh
 
-MFM_PATH=$(pwd)/lib
+MFM_PATH=$(pwd)/rules
 export MFM_PATH
-perl "$@" `for i in lib/perl/*; do echo -I$i; done` mfm.pl build
+perl "$@" `for i in rules/perl/*; do echo -I$i; done` mfm.pl build

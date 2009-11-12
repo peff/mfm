@@ -1,6 +1,6 @@
 all
 doc
 install
-install-lib
+install-rules
 clean
 vcsignore

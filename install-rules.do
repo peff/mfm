@@ -1,3 +1,3 @@
 dependon 'install';
 target 'install';
-formake './mfm install lib'
+formake './mfm install rules'

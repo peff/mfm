@@ -38,9 +38,15 @@ sub borrow {
   return if -e $to;
   my $src = shift || $to;
 
-  my $base = basename($src);
+  my @path = split /\//, $src;
+  my @search;
+  do {
+    push @search, join('/', @path);
+    shift @path;
+  } while(@path);
+
   foreach my $dir (MFM::Path::borrow) {
-    foreach my $from (uniq("$dir/$src", "$dir/$base")) {
+    foreach my $from (map { "$dir/$_" } @search) {
       if(-e $from) {
         push @CLEAN, mkpath(dirname($to));
         push @CLEAN, $to;

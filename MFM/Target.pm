@@ -1,4 +1,4 @@
-package Mfm::Target;
+package MFM::Target;
 use strict;
 use File::Glob qw(:glob);
 use File::Basename;
@@ -127,7 +127,7 @@ sub run_rules {
   $@ and die Error::Parent->new(
     "...while making $self"
       . ($rule
-          ? ' (rule: ' . ($Mfm::DEBUG > 0 ? $rule : basename($rule)) . ')'
+          ? ' (rule: ' . ($MFM::DEBUG > 0 ? $rule : basename($rule)) . ')'
           : ''),
     $@);
 }
@@ -165,7 +165,7 @@ sub _find_rule {
 }
 
 sub _lookup_rule {
-  foreach my $d (Mfm::Path::rule) {
+  foreach my $d (MFM::Path::rule) {
     foreach my $f (@_) {
       foreach my $r (bsd_glob("$d/$f", 0)) {
         return $r;
@@ -179,14 +179,14 @@ my $CODE_NUMBER = 0;
 sub _do_rule {
   my ($self, $rule, $data) = @_;
 
-  local $Mfm::TARGET = $self;
-  local $Mfm::TEMPFILE = $self->tempfile;
-  local $Mfm::RULEDATA = $data;
+  local $MFM::TARGET = $self;
+  local $MFM::TEMPFILE = $self->tempfile;
+  local $MFM::RULEDATA = $data;
 
   $CODE_NUMBER++;
   my $code = "#line 1 $rule\n" .
-             "package Mfm::Eval$CODE_NUMBER;\n" .
-             "use Mfm;\n" .
+             "package MFM::Eval$CODE_NUMBER;\n" .
+             "use MFM;\n" .
              "use SimpleIO::Cat;\n" .
              "use SimpleIO::Write;\n" .
              cat_scalar($rule);
@@ -196,7 +196,7 @@ sub _do_rule {
 
 sub _get {
   my $name = shift;
-  return $TARGETS{$name} ||= Mfm::Target->new($name);
+  return $TARGETS{$name} ||= MFM::Target->new($name);
 }
 
 sub _wrap {

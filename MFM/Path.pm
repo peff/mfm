@@ -1,7 +1,7 @@
-package Mfm::Path;
+package MFM::Path;
 use strict;
-use Mfm::File; # DEPEND
-use Mfm; # DEPEND
+use MFM::File; # DEPEND
+use MFM; # DEPEND
 
 my @PATH = split /:/, $ENV{MFM_PATH};
 eval {
@@ -11,7 +11,7 @@ push @PATH, "$AutoHome::HOME/share/mfm";
 
 my $borrow;
 sub borrow {
-  $borrow ||= [Mfm::uniq(Mfm::File::expand('MFM-RULES', @PATH))];
+  $borrow ||= [MFM::uniq(MFM::File::expand('MFM-RULES', @PATH))];
   return @$borrow;
 }
 

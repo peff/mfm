@@ -1,4 +1,4 @@
-package Mfm::File;
+package MFM::File;
 use strict;
 use SimpleIO::Cat; # DEPEND
 

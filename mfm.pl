@@ -1,7 +1,7 @@
 use strict;
 use warnings qw(FATAL all);
 use Error::Die; # DEPEND
-use Mfm; # DEPEND
+use MFM; # DEPEND
 use SimpleIO::Cat; # DEPEND
 use SimpleIO::Write; # DEPEND
 use SimpleIO::Copy; # DEPEND
@@ -47,7 +47,7 @@ elsif($cmd eq 'install') {
 }
 
 elsif($cmd eq 'rulesets') {
-  print "$_\n" foreach Mfm::Path::rule;
+  print "$_\n" foreach MFM::Path::rule;
 }
 
 else {

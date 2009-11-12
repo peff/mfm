@@ -1,9 +1,9 @@
-package Mfm;
+package MFM;
 use strict;
 use File::Path;
 use File::Basename;
-use Mfm::Path; # DEPEND
-use Mfm::Target; # DEPEND
+use MFM::Path; # DEPEND
+use MFM::Target; # DEPEND
 use Error::Multi; # DEPEND
 use SimpleIO::Copy; # DEPEND
 use base qw(Exporter);
@@ -39,7 +39,7 @@ sub borrow {
   my $src = shift || $to;
 
   my $base = basename($src);
-  foreach my $dir (Mfm::Path::borrow) {
+  foreach my $dir (MFM::Path::borrow) {
     foreach my $from (uniq("$dir/$src", "$dir/$base")) {
       if(-e $from) {
         push @CLEAN, mkpath(dirname($to));
@@ -69,7 +69,7 @@ sub target {
 
 push @EXPORT, qw(get);
 sub get {
-  return Mfm::Target::_get(@_);
+  return MFM::Target::_get(@_);
 }
 
 push @EXPORT, qw(formake);
@@ -92,12 +92,12 @@ sub atomic {
 
 push @EXPORT, qw(wrap);
 sub wrap {
-  return Mfm::Target::_wrap(@_);
+  return MFM::Target::_wrap(@_);
 }
 
 push @EXPORT, qw(targets);
 sub targets {
-  return sort values(%Mfm::Target::TARGETS);
+  return sort values(%MFM::Target::TARGETS);
 }
 
 push @EXPORT, qw(finalize);

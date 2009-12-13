@@ -1,6 +1,7 @@
 my ($var, $src) = cat($RULEDATA);
 my $package = $TARGET->name;
-$package =~ s#^lib/##;
+my $prefix = get('lib-perldeps')->getattr('prefix');
+$package =~ s#^$prefix##;
 $package =~ s#/#::#g;
 $package =~ s/\.pm$//;
 

@@ -1,3 +1,7 @@
+my ($prefix) = trydepend('MFM-PERLLIB') ? cat('MFM-PERLLIB') : ('');
+$prefix .= '/' if ($prefix && $prefix !~ m{/$});
+setattr prefix => $prefix;
+
 setattr run =>
 sub {
   my $source = shift;
@@ -15,5 +19,5 @@ sub {
       last;
     }
   }
-  return map { s!::!/!g; "lib/$_.pm" } @r;
+  return map { s!::!/!g; "$prefix$_.pm" } @r;
 }

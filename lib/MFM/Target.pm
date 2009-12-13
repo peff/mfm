@@ -92,7 +92,7 @@ sub getattr {
   my $self = shift;
   my $k = shift;
   $self->run_rules;
-  return @{$self->{attrs}->{$k} || []};
+  return wantarray ? @{$self->{attrs}->{$k} || []} : $self->{attrs}->{$k}->[0];
 }
 
 sub getattr_recurse {

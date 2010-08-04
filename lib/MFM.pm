@@ -38,12 +38,7 @@ sub borrow {
   return if -e $to;
   my $src = shift || $to;
 
-  my @path = split /\//, $src;
-  my @search;
-  do {
-    push @search, join('/', @path);
-    shift @path;
-  } while(@path);
+  my @search = MFM::Path::components($src);
 
   foreach my $dir (MFM::Path::borrow) {
     foreach my $from (map { "$dir/$_" } @search) {

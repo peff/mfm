@@ -13,6 +13,8 @@ foreach my $t (@TYPES) {
   }
 }
 
+push @lines, cat('MFM-HIEREXTRA') if trydepend('MFM-HIEREXTRA');
+
 push @FILES, 'hier.shlib';
 push @CLEAN, 'hier.shlib';
 write_file('hier.shlib',

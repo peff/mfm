@@ -37,8 +37,8 @@ sub components {
 
   my @r;
   while (@expanded) {
-    my $e = pop @expanded;
-    push @r, pop(@$e);
+    my $e = shift @expanded;
+    push @r, shift(@$e);
     push @expanded, $e if @$e;
   }
 

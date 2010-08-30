@@ -6,10 +6,11 @@ use SimpleIO::Cat; # DEPEND
 use SimpleIO::Write; # DEPEND
 use SimpleIO::Copy; # DEPEND
 use File::Path;
+use File::Basename;
 
 my $cmd = @ARGV ? shift : 'build';
 
-if($cmd eq 'build') {
+if($cmd eq 'build' || $cmd eq 'dist') {
   do_clean();
 
   push @Error::Die::CLEANUP, sub { eval { rmtree("$_") } foreach @CLEAN };
@@ -23,6 +24,8 @@ if($cmd eq 'build') {
   write_file('MFM-FILES', sort(@FILES)) if @FILES;
   write_file('MFM-CLEAN', sort(@CLEAN)) if @CLEAN;
   write_file('MFM-REALLYCLEAN', sort(@REALLYCLEAN)) if @REALLYCLEAN;
+
+  do_dist() if $cmd eq 'dist';
 }
 
 elsif($cmd eq 'clean') {
@@ -62,6 +65,35 @@ sub do_clean {
       qw(Makefile MFM-FILES MFM-CLEAN)) {
     eval { rmtree($f) };
   }
+}
+
+sub distfiles {
+  return @FILES,
+         (-e 'MFM-EXTRA' ? cat('MFM-EXTRA') : ()),
+         qw(
+           MFM-VERSION
+           Makefile
+         );
+}
+
+sub do_dist {
+  my ($package) = cat('MFM-VERSION');
+  $package =~ y/ /-/;
+
+  rmtree($package);
+  mkpath($package);
+  foreach my $from (distfiles()) {
+    my $to = "$package/$from";
+    mkpath(dirname($to));
+    safe_copy($from, $to)
+      or die "unable to copy $from to $to: $!";
+  }
+
+  system(qw(tar cf), "$package.tar", $package)
+    and die "unable to create tar archive";
+  system(qw(gzip -9 -f), "$package.tar")
+    and die "unable to compress tar archive";
+  rmtree($package);
 }
 
 sub write_makefile {

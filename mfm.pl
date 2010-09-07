@@ -68,7 +68,7 @@ sub do_clean {
 }
 
 sub distfiles {
-  return @FILES,
+  return (map { "$_" } @FILES),
          (-e 'MFM-EXTRA' ? cat('MFM-EXTRA') : ()),
          qw(
            MFM-VERSION

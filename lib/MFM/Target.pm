@@ -57,7 +57,13 @@ sub tempfile {
 
 sub run_finalize {
   my $self = shift;
-  $self->{finalize}->() if $self->{finalize};
+  return unless $self->{finalize};
+
+  eval {
+    local $MFM::TARGET = $self;
+    $self->{finalize}->();
+  };
+  $@ and die Error::Parent->new("...while finalizing $self", $@);
 }
 
 sub write_makefile {

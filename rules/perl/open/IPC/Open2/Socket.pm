@@ -20,5 +20,5 @@ sub open2_socket {
     die "unable to exec $_[0]: $!";
   }
   close($remote);
-  return $local;
+  return wantarray ? ($local, $pid) : $local;
 }

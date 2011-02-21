@@ -24,16 +24,16 @@ Specifying rulesets
 How do I tell mfm which sets of rules to use?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Rulesets are listed, one per line, in the file `MFM` in the current
-directory. Rulesets may recursively include other rulesets via `MFM`
-files in the ruleset directories.
+Rulesets are listed, one per line, in the file `MFM-RULES` in the
+current directory. Rulesets may recursively include other rulesets via
+`MFM-RULES` files in the ruleset directories.
 
 The implicit ruleset `.` (the current directory) is always prepended to
 the list of rulesets.
 
 
-What is the format of the `MFM` file?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What is the format of the `MFM-RULES` file?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Each line contains the name of one ruleset. If the name begins with a
 `/`, then the name specifies the absolute path to a directory containing
@@ -41,10 +41,10 @@ the ruleset. If the name begins with a `.`, then the name specifies a
 a path relative to the current directory. Otherwise, the name is
 resolved to a directory by searching through the mfm library path.
 
-Before being split into lines, the `MFM` file is first interpolated as a
-Perl string (i.e., as if it were contained in Perl double-quotes). In
-most cases, the result is identical to the input; however there are two
-important implications:
+Before being split into lines, the `MFM-RULES` file is first
+interpolated as a Perl string (i.e., as if it were contained in Perl
+double-quotes). In most cases, the result is identical to the input;
+however there are two important implications:
 
 . Any metacharacters must be quoted. For example:
 +
@@ -53,7 +53,7 @@ name with \$ and \\
 quotes are "ok"
 -----------------------------------------------------
 
-. Dynamic generation of `MFM` content is possible. For example:
+. Dynamic generation of `MFM-RULES` content is possible. For example:
 +
 -----------------------------------------------------
 $ENV{HOME}/mfm/ruleset
@@ -75,10 +75,10 @@ separated by a colon (`:`).
 is determined at mfm's build-time from the file `conf-home`.
 
 
-What is the order of ruleset lookup for recursive `MFM` files?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What is the order of ruleset lookup for recursive `MFM-RULES` files?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A ruleset which includes an `MFM` file has that file expanded in a
+A ruleset which includes an `MFM-RULES` file has that file expanded in a
 depth-first way. In other words, all rulesets caused by expanding a
 single line take the place of that line.
 
@@ -88,7 +88,8 @@ What is an example of a complex ruleset expansion?
 
 Imagine that your `MFM_PATH` contains `/home/user/mfm:/home/user2/mfm`
 and mfm was built with a `conf-home` of `/usr/local`. Your current
-working directory is `/home/user/project`.  The file `MFM` contains:
+working directory is `/home/user/project`.  The file `MFM-RULES`
+contains:
 
 -----------------------------------------------------
 /usr/share/extra-rules
@@ -106,8 +107,8 @@ The following ruleset directories will be used (in the order given):
 /usr/local/share/mfm/base
 -----------------------------------------------------
 
-Furthermore, suppose that `/home/user/mfm/base` contains an `MFM` file
-with additional rulesets:
+Furthermore, suppose that `/home/user/mfm/base` contains an `MFM-RULES`
+file with additional rulesets:
 
 -----------------------------------------------------
 other/ruleset
@@ -143,8 +144,8 @@ Specifying targets and their rules
 How do I tell mfm which targets to build?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Put the name of each target, one per line, in the file `BUILD` in the
-current directory.
+Put the name of each target, one per line, in the file `MFM-BUILD` in
+the current directory.
 
 
 How is each target built?
@@ -252,30 +253,31 @@ If no subcommand is given, then 'build' is assumed.
 What does `mfm build` do?
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-mfm will invoke the rule for each target listed in the `BUILD` file
+mfm will invoke the rule for each target listed in the `MFM-BUILD` file
 and write the resulting Makefile.
 
-It will also write a file, `FILES`, which contains the name of each
+It will also write a file, `MFM-FILES`, which contains the name of each
 source file, one per line. A source file is a file that is a dependency
 of some target in the Makefile, but which is not itself built (shipping
-the Makefile and all files listed in `FILES` is therefore sufficient to
-allow others to build the project).
+the Makefile and all files listed in `MFM-FILES` is therefore sufficient
+to allow others to build the project).
 
-It will also write a file, `CLEAN`, which contains the name of each file
-generated or borrowed by mfm. This file can later be used to remove the
-work done by mfm.
+It will also write a file, `MFM-CLEAN`, which contains the name of each
+file generated or borrowed by mfm. This file can later be used to remove
+the work done by mfm.
 
 
 What does `mfm clean` do?
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For every file listed in `CLEAN`, mfm will remove that file. For every
-directory listed in `CLEAN`, mfm will recursively remove that directory.
-This is conceptually the opposite of `mfm build`; the command `mfm
-build; mfm clean` should produce no changes.
+For every file listed in `MFM-CLEAN`, mfm will remove that file. For
+every directory listed in `MFM-CLEAN`, mfm will recursively remove that
+directory.  This is conceptually the opposite of `mfm build`; the
+command `mfm build; mfm clean` should produce no changes.
 
 Where can I find an example of mfm being used?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-mfm is self-hosting, so you can examine its `MFM` and `BUILD` files.
-There is also a link:example.html[hello world example] with commentary.
+mfm is self-hosting, so you can examine its `MFM-RULES` and `MFM-BUILD`
+files.  There is also a link:example.html[hello world example] with
+commentary.

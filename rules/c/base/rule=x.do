@@ -1,5 +1,5 @@
 my @deps = cat($RULEDATA);
-my @objects = map { /\.lib$/ ? cat($_) : $_ } @deps;
+my @objects = map { /\.lib$/ ? "`cat $_`" : $_ } @deps;
 
 target;
 dependon 'mkex', "$TARGET.o", @deps;

@@ -85,8 +85,12 @@ sub do_dist {
   foreach my $from (distfiles()) {
     my $to = "$package/$from";
     mkpath(dirname($to));
-    safe_copy($from, $to)
-      or die "unable to copy $from to $to: $!";
+    if (-d $from) {
+      recursive_copy($from, $to);
+    }
+    else {
+      safe_copy($from, $to);
+    }
   }
 
   system(qw(tar cf), "$package.tar", $package)

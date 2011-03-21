@@ -138,6 +138,17 @@ sub run_rules {
     $@);
 }
 
+sub extensions {
+  my $self = shift;
+
+  my @parts = split /\./, $self->{name};
+  shift @parts; # first part is base
+
+  return map {
+    join('.', @parts[$_..$#parts])
+  } (0 .. $#parts);
+}
+
 sub _find_rule {
   my $self = shift;
   my $rule;
@@ -159,8 +170,8 @@ sub _find_rule {
     }
   }
 
-  if($self =~ /.*\.(.*)/) {
-    $rule = _lookup_rule("rule.$1.do")
+  foreach my $ext ($self->extensions) {
+    $rule = _lookup_rule("rule.$ext.do")
       and return $rule;
   }
 

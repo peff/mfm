@@ -172,7 +172,7 @@ sub _find_rule {
 
 sub _lookup_rule {
   foreach my $f (MFM::Path::components(@_)) {
-    foreach my $d (MFM::Path::rule) {
+    foreach my $d (MFM::Path::rule()) {
       foreach my $r (bsd_glob("$d/$f", 0)) {
         return $r;
       }

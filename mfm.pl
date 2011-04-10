@@ -15,6 +15,7 @@ if($cmd eq 'build' || $cmd eq 'dist') {
 
   push @Error::Die::CLEANUP, sub { eval { rmtree("$_") } foreach @CLEAN };
   get('MFM-BUILD')->run_rules;
+  get('MFM-VERSION')->run_rules if $cmd eq 'dist';
   get($_)->run_rules foreach cat('MFM-BUILD');
   $_->run_finalize foreach targets;
 

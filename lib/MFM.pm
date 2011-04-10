@@ -120,9 +120,8 @@ sub run {
 
 push @EXPORT, qw(alias);
 sub alias {
-  my $rule = shift;
   eval {
-    $TARGET->set_rule($rule);
+    $TARGET->set_rule(@_);
     $TARGET->run_rules;
   };
   $@ and die $DEBUG ? $@ : $@->{child};

@@ -114,6 +114,7 @@ sub getattr_recurse {
 sub set_rule {
   my $self = shift;
   $self->{rule} = shift;
+  $self->{ruledata} = shift;
 }
 
 sub run_rules {
@@ -156,7 +157,7 @@ sub _find_rule {
   if($self->{rule}) {
     $rule = _lookup_rule($self->{rule})
       or die "unable to find rule $self->{rule}";
-    return $rule;
+    return ($rule, $self->{ruledata});
   }
 
   $rule = _lookup_rule("$self.do", "$self=*");

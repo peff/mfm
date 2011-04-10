@@ -13,6 +13,10 @@ sub cat_scalar {
       open($fh, '<', $f)
         or die "unable to open $f: $!";
     }
+    elsif (ref($f) eq 'SCALAR') {
+      $buf .= $$f;
+      next;
+    }
     else {
       $fh = $f;
     }

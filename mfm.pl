@@ -53,6 +53,10 @@ elsif($cmd eq 'rulesets') {
   print "$_\n" foreach MFM::Path::rule;
 }
 
+elsif ($cmd eq 'version') {
+  print "$PACKAGE $VERSION\n";
+}
+
 else {
   die "unknown command: $cmd";
 }

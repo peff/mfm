@@ -1,6 +1,8 @@
 perl/simpleio
 perl/error
+perl/version
 perl/base
 shell/install/allbin
 doc/asciidoc/simple
+base/gitversion
 base

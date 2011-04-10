@@ -5,19 +5,22 @@ our @EXPORT = qw(cat_scalar cat_rawlines cat_lines cat_sh cat);
 
 sub cat_scalar {
   my $buf;
-  my $len = 0;
 
   FILE:
   foreach my $f (@_) {
-    use IO::File;
-    my $fh = ref($f) ? $f : new IO::File($f, 'r');
-    $fh or die "unable to open $f: $!";
+    my $fh;
+    if (!ref($f)) {
+      open($fh, '<', $f)
+        or die "unable to open $f: $!";
+    }
+    else {
+      $fh = $f;
+    }
 
     while(1) {
-      my $r = $fh->read($buf, 4096, $len);
+      my $r = read($fh, $buf, 4096, length($buf));
       defined($r) or die "error reading $f: $!";
       next FILE unless $r;
-      $len += $r;
     }
   }
 

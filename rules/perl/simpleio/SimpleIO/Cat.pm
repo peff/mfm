@@ -7,6 +7,7 @@ sub cat_scalar {
   my $buf;
   my $len = 0;
 
+  FILE:
   foreach my $f (@_) {
     use IO::File;
     my $fh = ref($f) ? $f : new IO::File($f, 'r');
@@ -15,7 +16,7 @@ sub cat_scalar {
     while(1) {
       my $r = $fh->read($buf, 4096, $len);
       defined($r) or die "error reading $f: $!";
-      return $buf unless $r;
+      next FILE unless $r;
       $len += $r;
     }
   }

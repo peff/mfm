@@ -1,0 +1,2 @@
+our $PACKAGE = q(@@PACKAGE@@);
+our $VERSION = q(@@VERSION@@);

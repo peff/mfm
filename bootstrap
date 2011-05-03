@@ -2,4 +2,9 @@
 
 MFM_PATH=$MFM_PATH:$(pwd)/rules
 export MFM_PATH
-perl "$@" -Ilib `for i in rules/perl/*; do echo -I$i; done` mfm.pl build
+{
+  echo 'our $PACKAGE = qw(mfm);'
+  echo 'our $VERSION = qw(bootstrap);'
+  cat mfm.pl
+} |
+perl "$@" -Ilib `for i in rules/perl/*; do echo -I$i; done` -- - build

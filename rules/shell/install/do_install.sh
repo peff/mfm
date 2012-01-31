@@ -20,7 +20,7 @@ d() {
     || die "unable to make directory $1"
 }
 
-c() {
+cb() {
   owner=
   group=
   if test "$3" -ne "-1"; then
@@ -30,9 +30,13 @@ c() {
     group="-o $4"
   fi
 
-  $install_verbose echo Copying file "$1/$2"
-  install -c -m $5 $owner $group $2 "${DESTDIR}$1/$2" \
-    || die "unable to install file $1/$2"
+  $install_verbose echo Copying file "$1"
+  install -c -m $5 $owner $group $2 "${DESTDIR}$1" \
+    || die "unable to install file $1"
+}
+
+c() {
+  cb "$1/$2" "$2" "$3" "$4" "$5"
 }
 
 install_verbose_on() {

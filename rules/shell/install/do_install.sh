@@ -48,4 +48,10 @@ install_verbose_off() {
 }
 
 install_verbose_off
-hier
+if test -z "$1"; then
+  hier
+else
+  for i in "$@"; do
+    hier_$i
+  done
+fi

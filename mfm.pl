@@ -19,9 +19,7 @@ if($cmd eq 'build' || $cmd eq 'dist') {
   get($_)->run_rules foreach cat('MFM-BUILD');
   $_->run_finalize foreach targets;
 
-  write_makefile('Makefile',
-    sort { $a->{priority} <=> $b->{priority} || $a cmp $b } targets
-  );
+  write_makefile('Makefile', targets);
   write_file('MFM-FILES', sort(@FILES)) if @FILES;
   write_file('MFM-CLEAN', sort(@CLEAN)) if @CLEAN;
   write_file('MFM-REALLYCLEAN', sort(@REALLYCLEAN)) if @REALLYCLEAN;

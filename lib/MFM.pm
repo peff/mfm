@@ -97,7 +97,10 @@ sub wrap {
 
 push @EXPORT, qw(targets);
 sub targets {
-  return sort values(%MFM::Target::TARGETS);
+  return sort {
+    $a->priority <=> $b->priority ||
+    $a->name cmp $b->name
+  } values(%MFM::Target::TARGETS);
 }
 
 push @EXPORT, qw(finalize);

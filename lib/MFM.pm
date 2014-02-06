@@ -156,10 +156,13 @@ sub extragen {
 push @EXPORT, qw(replace_ext);
 sub replace_ext {
   local $_ = shift;
-  my $old = shift || '[^.]+';
+  my $old = shift;
   my $new = shift;
 
-  if(s/\.\Q$old\E$// && defined $new) {
+  my $regex = defined $old ?
+              qr/\Q$old\E/ :
+              qr/[^.]+/;
+  if(s/\.$regex$// && defined $new) {
     $_ .= ".$new";
   }
   return $_;
